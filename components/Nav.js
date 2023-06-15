@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Nav = () => {
-  const isLoggedIn = true;
+  const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
 
   useEffect(() => {
@@ -24,12 +24,12 @@ const Nav = () => {
         <p className="logo_text">EasyAIPrompt</p>
       </Link>
       <div className="sm:flex hidden">
-        {isLoggedIn ? (
+        {session?.user ? (
           <div className='flex gap-3 md:gap-5'>
             <Link href='/create-prompt' className='black_btn'>Create Post</Link>
             <button type='button' onClick={signOut} className='outline_btn'>Sign Out</button>
             <Link href='/profile'>
-              <Image src='/assets/images/icons-96.png' width={37} height={37} className='rounded-full' alt='profile' />
+              <Image src={session?.user.image} width={37} height={37} className='rounded-full' alt='profile' />
             </Link>
           </div>
         ) : (
