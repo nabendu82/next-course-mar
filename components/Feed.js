@@ -4,9 +4,22 @@ import PromptList from "./PromptList";
 
 const Feed = () => {
   const [searchText, setSearchText] = useState('');
+  const [searchedResults, setSearchedResults] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
-  const handleSearchChange = e => {}
-  const handleTagClick = tag => {}
+
+  const filteredPrompts = text => allPosts.filter(item => item.prompt.includes(text) || item.tag.includes(text))
+
+  const handleSearchChange = e => {
+    setSearchText(e.target.value)
+    const searchResult = filteredPrompts(e.target.value)
+    setSearchedResults(searchResult)
+  }
+
+  const handleTagClick = tag => {
+    setSearchText(tag);
+    const searchResult = filteredPrompts(tag);
+    setSearchedResults(searchResult)
+  }
   
   useEffect(() => {
     const fetchPosts = async () => {
@@ -29,7 +42,8 @@ const Feed = () => {
           className='search_input peer'
         />
       </form>
-      <PromptList data={allPosts} handleTagClick={handleTagClick} />
+      {searchText ? <PromptList data={searchedResults} handleTagClick={handleTagClick} /> : <PromptList data={allPosts} handleTagClick={handleTagClick} />}
+      
     </section>
   )
 }
